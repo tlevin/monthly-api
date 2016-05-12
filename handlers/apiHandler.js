@@ -9,6 +9,10 @@ var apiHandler = {
     if(req.body.totalMonthlyActiveUsers < 0 || typeof req.body.totalMonthlyActiveUsers !== 'number'){
       body.result = "error";
       body.err = "invalid number of users";
+    } 
+    if (!req.body.pricingBuckets.length){
+      body.result = "error";
+      body.err = "invalid pricing tier";
     }
     res.status(201)
     res.send(body)

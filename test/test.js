@@ -90,5 +90,22 @@ describe('Monthly Charge API', function () {
         });
     });
 
+    it('should return a correct err result for missing pricingBuckets', function(done){
+      var invalidInput = {
+        "companyName" : "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": []
+      };
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(invalidInput)
+        .expect(500)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('error');
+          expect(res.body.err).to.equal('invalid pricing tier');
+          done();
+        });
+    });
+
   })
 });
