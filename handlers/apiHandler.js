@@ -1,21 +1,10 @@
+var monthlyChargeBuilder = require('../controllers/monthlyCharges.js')
 
 var apiHandler = {
   calculateMonthlyCharges: function(req, res){
-    var body = {
-      charge: 110000,
-      result: "success",
-      err: null 
-    }
-    if(req.body.totalMonthlyActiveUsers < 0 || typeof req.body.totalMonthlyActiveUsers !== 'number'){
-      body.result = "error";
-      body.err = "invalid number of users";
-    } 
-    if (!req.body.pricingBuckets.length){
-      body.result = "error";
-      body.err = "invalid pricing tier";
-    }
+    var resultBody = monthlyChargeBuilder(req.body)
     res.status(201)
-    res.send(body)
+    res.send(resultBody);
   },
   getMonthlyCharge: function(req, res){
     res.send('ok')
