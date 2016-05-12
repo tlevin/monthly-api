@@ -28,6 +28,47 @@ describe('Monthly Charge API', function () {
   });
 
   describe('Calculations', function() {
-    
+    var body = { 
+        "companyName" : "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
+      }
+
+    it('should return a charge amount', function(done){
+      
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body).to.have.property('charge')
+          done()
+        })
+    });
+
+    it('should return a correct charge amount', function(done){
+      
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body).to.have.property('charge')
+          expect(res.body.charge).to.equal(110000)
+          done()
+        })
+    });
+
+    it('should return a result property', function(done){
+      
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body).to.have.property('result')
+          done()
+        })
+    })
   })
 });
