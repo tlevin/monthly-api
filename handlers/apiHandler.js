@@ -1,9 +1,11 @@
+
 var apiHandler = {
   calculateMonthlyCharges: function(req, res){
 
+    res.sendStatus(201)
   },
-  getMonthlyCharges: function(req, res){
-    
+  getMonthlyCharge: function(req, res){
+    res.send('ok')
   }
 }
 
