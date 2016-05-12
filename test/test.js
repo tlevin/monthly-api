@@ -11,7 +11,7 @@ describe('Monthly Charge API', function () {
     it('should return 404 for route not in routers', function (done) {
       request
         .get('/v1/somethingnotthere')
-        .expect(404, done)
+        .expect(404, done);
     });
   
     it('should return 201 for successful post', function(done){
@@ -19,11 +19,11 @@ describe('Monthly Charge API', function () {
         "companyName" : "EAT24",
         "totalMonthlyActiveUsers" : 382983,
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10}, { numUsers: 50000, price: 5 } ]
-      }
+      };
       request
         .post('/v1/company/2/monthlyCharges')
         .send(body)
-        .expect(201, done)
+        .expect(201, done);
     });
   });
 
@@ -32,17 +32,19 @@ describe('Monthly Charge API', function () {
         "companyName" : "EAT24",
         "totalMonthlyActiveUsers": 10000,
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
-      }
+      };
 
-    it('should return a charge amount', function(done){
+    it('should return an object with charge, result, and err properties', function(done){
       
       request
         .post('/v1/company/2/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
-          expect(res.body).to.have.property('charge')
-          done()
+          expect(res.body).to.have.property('charge');
+          expect(res.body).to.have.property('result');
+          expect(res.body).to.have.property('err');
+          done();
         })
     });
 
@@ -53,22 +55,40 @@ describe('Monthly Charge API', function () {
         .send(body)
         .expect(201)
         .end(function(err, res){
-          expect(res.body).to.have.property('charge')
-          expect(res.body.charge).to.equal(110000)
-          done()
-        })
+          expect(res.body).to.have.property('charge');
+          expect(res.body.charge).to.equal(110000);
+          done();
+        });
     });
 
-    it('should return a result property', function(done){
-      
-      request
+    it('should return a correct result and err value', function(done){
+       request
         .post('/v1/company/2/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
-          expect(res.body).to.have.property('result')
-          done()
-        })
-    })
+          expect(res.body.result).to.equal('success');
+          expect(res.body.err).to.equal(null);
+          done();
+        });
+    });
+
+    it('should return a correct err result for invalid number of user input', function(done){
+      var invalidInput = {
+        "companyName" : "EAT24",
+        "totalMonthlyActiveUsers": -1,
+        "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(invalidInput)
+        .expect(500)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('error');
+          expect(res.body.err).to.equal('invalid number of users');
+          done();
+        });
+    });
+
   })
 });
