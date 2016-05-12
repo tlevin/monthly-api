@@ -25,6 +25,18 @@ describe('Monthly Charge API', function () {
         .send(body)
         .expect(201, done);
     });
+
+    it('should return 300 for invalid input (bad request)', function(done){
+      var invalidInput = {
+        "companyName" : "EAT24",
+        "totalMonthlyActiveUsers": -1,
+        "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(invalidInput)
+        .expect(400, done);
+    })
   });
 
   describe('Calculations', function() {
@@ -82,7 +94,7 @@ describe('Monthly Charge API', function () {
       request
         .post('/v1/company/2/monthlyCharges')
         .send(invalidInput)
-        .expect(500)
+        .expect(400)
         .end(function(err, res){
           expect(res.body.result).to.equal('error');
           expect(res.body.err).to.equal('invalid number of users');
@@ -99,13 +111,14 @@ describe('Monthly Charge API', function () {
       request
         .post('/v1/company/2/monthlyCharges')
         .send(invalidInput)
-        .expect(500)
+        .expect(400)
         .end(function(err, res){
           expect(res.body.result).to.equal('error');
           expect(res.body.err).to.equal('invalid pricing tier');
           done();
         });
     });
+
 
   })
 });
