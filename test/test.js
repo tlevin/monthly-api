@@ -1,8 +1,8 @@
+process.env.NODE_ENV = 'test'
 var app = require('../app.js')
 var request = require('supertest')(app);
 var expect = require('chai').expect; 
-var mocha = require('mocha')
-
+var mocha = require('mocha');
 
 describe('Monthly Charge API', function () {
   
@@ -26,7 +26,7 @@ describe('Monthly Charge API', function () {
         .expect(201, done);
     });
 
-    it('should return 300 for invalid input (bad request)', function(done){
+    it('should return 400 for invalid input (bad request)', function(done){
       var invalidInput = {
         "companyName" : "EAT24",
         "totalMonthlyActiveUsers": -1,
@@ -39,7 +39,7 @@ describe('Monthly Charge API', function () {
     })
   });
 
-  describe('Calculations', function() {
+  describe('Return object validations', function() {
     var body = { 
         "companyName" : "EAT24",
         "totalMonthlyActiveUsers": 10000,
@@ -118,7 +118,87 @@ describe('Monthly Charge API', function () {
           done();
         });
     });
+    it('should return a correct err result for missing companyName', function(done){
+      var invalidInput = {
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [{ numUsers: 0, price: 20}, { numUsers: 1000, price: 10}]
+      };
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(invalidInput)
+        .expect(400)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('error');
+          expect(res.body.err).to.equal('missing company name');
+          done();
+        });
+    });
+  });
 
-
+  describe('Calculations checking', function(){
+    it('should work with multiple price tiers', function(done){
+      var body = {
+        "companyName": "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('success');
+          expect(res.body.charge).to.equal(110000);
+          done();
+        });
+    });
+    it('should work with single price tier', function(done){
+      var body = {
+        "companyName": "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [ { numUsers: 0, price: 10} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('success');
+          expect(res.body.charge).to.equal(100000);
+          done();
+        });
+    });
+    it('should work if numUsers 0 is not included', function(done){
+      var body = {
+        "companyName": "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [ { numUsers: 5000, price: 5} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('success');
+          expect(res.body.charge).to.equal(75000);
+          done();
+        });
+    });
+    it('should work if number of users less than max provided numUsers', function(done){
+      var body = {
+        "companyName": "EAT24",
+        "totalMonthlyActiveUsers": 4000,
+        "pricingBuckets": [ { numUsers: 5000, price: 5} ]
+      }
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(201)
+        .end(function(err, res){
+          expect(res.body.result).to.equal('success');
+          expect(res.body.charge).to.equal(40000);
+          done();
+        });
+    });
   })
 });
