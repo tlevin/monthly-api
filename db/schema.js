@@ -13,7 +13,7 @@ knex.schema.hasTable('monthly_charges').then(function(exists){
       table.json('pricing_tiers');
       table.integer('users');
       table.integer('charge');
-      table.json('company_name');
+      table.string('company_name');
       table.string('month');
     }).then(function(){
       console.log('Monthly Charges table created');
