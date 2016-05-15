@@ -8,7 +8,7 @@ module.exports = function(input){
 
   // Invalid input checks
   // Workaround to mock a promise return
-  if(!pricingTier.length){
+  if(!pricingTier || pricingTier.length < 1){
     return {
       then: function(cb){
         cb({
@@ -31,7 +31,7 @@ module.exports = function(input){
       }
     }
   }
-  
+
   if(!companyName){
     return {
       then: function(cb){
@@ -45,7 +45,6 @@ module.exports = function(input){
   }
 
   var curCharge = 0;
-
   // To ensure we are progressing from largest user tier to smallest
   // We sort using native sort O(NlogN)
 
@@ -78,7 +77,7 @@ module.exports = function(input){
     pricing_tiers: JSON.stringify(pricingTier),
     users: +input.totalMonthlyActiveUsers,
     charge: curCharge,
-    company_name: JSON.stringify(companyName),
+    company_name: companyName,
     month: year + '_' + month,
   }).then(function(){
     return {

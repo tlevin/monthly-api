@@ -1,4 +1,4 @@
-var monthlyChargeBuilder = require('../controllers/monthlyCharges.js')
+var monthlyChargeBuilder = require('../helpers/monthlyCharges.js')
 
 var apiHandler = {
   calculateMonthlyCharges: function(req, res){

@@ -8,7 +8,9 @@ if(process.env.NODE_ENV === 'test'){
     password: 'admin',
     database: 'monthlyapi-test'
   }
-} else if(process.env.NODE_ENV === 'development'){
+} else if(process.env.NODE_ENV === 'production'){
+  // fill in values based on process elements
+} else {
   pg_connection = {
     host: 'localhost',
     port: 5432,
@@ -16,8 +18,5 @@ if(process.env.NODE_ENV === 'test'){
     password: 'admin',
     database: 'monthlyapi-test'
   }
-} else if(process.env.NODE_ENV === 'production'){
-  // fill in values based on process elements
 }
-
 module.exports = pg_connection;

@@ -3,6 +3,7 @@ var app = require('../app.js')
 var request = require('supertest')(app);
 var expect = require('chai').expect; 
 var mocha = require('mocha');
+var db = require('../db/schema.js')
 
 describe('Monthly Charge API', function () {
   
@@ -200,5 +201,54 @@ describe('Monthly Charge API', function () {
           done();
         });
     });
-  })
+  });
+
+  describe('Database entry verification', function(){
+    beforeEach(function(done){
+      db('monthly_charges').del().then(function(){
+        done();
+      })
+    });
+    it('should not insert into db with invalid inputs', function(done){
+      var invalidInput = {
+        "companyName": "EAT24",
+        "totalMonthlyActiveUsers": -1,
+        "pricingBuckets": [{ numUsers: 0, price: 20}, { numUsers: 1000, price: 10}]
+      };
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(invalidInput)
+        .expect(400)
+        .end(function(err, res){
+          db('monthly_charges')
+            .where({company_name: invalidInput.companyName})
+            .then(function(result){
+              expect(result.length).to.equal(0);
+              done();
+            })
+        });
+    });
+
+    it('should insert into db with valid inputs', function(done){
+      var body = { 
+        "companyName" : "EAT24",
+        "totalMonthlyActiveUsers": 10000,
+        "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
+      };
+      request
+        .post('/v1/company/2/monthlyCharges')
+        .send(body)
+        .expect(400)
+        .end(function(err, res){
+          db('monthly_charges')
+            .where({company_name: body.companyName})
+            .then(function(result){
+              expect(result.length).to.equal(1);
+              expect(result[0].charge).to.equal(110000)
+              expect(result[0].company_name).to.equal('EAT24')
+              done();
+            })
+        });
+    })
+  });
 });
