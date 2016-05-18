@@ -16,7 +16,7 @@ if(process.env.NODE_ENV === 'test'){
     port: 5432,
     user: 'admin',
     password: 'admin',
-    database: 'monthlyapi-test'
+    database: 'monthlyapi'
   }
 }
 module.exports = pg_connection;

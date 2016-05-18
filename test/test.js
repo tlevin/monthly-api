@@ -22,7 +22,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10}, { numUsers: 50000, price: 5 } ]
       };
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201, done);
     });
@@ -34,7 +34,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(invalidInput)
         .expect(400, done);
     })
@@ -50,7 +50,7 @@ describe('Monthly Charge API', function () {
     it('should return an object with charge, result, and err properties', function(done){
       
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -64,7 +64,7 @@ describe('Monthly Charge API', function () {
     it('should return a correct charge amount', function(done){
       
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -76,7 +76,7 @@ describe('Monthly Charge API', function () {
 
     it('should return a correct result and err value', function(done){
        request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -93,7 +93,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(invalidInput)
         .expect(400)
         .end(function(err, res){
@@ -110,7 +110,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": []
       };
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(invalidInput)
         .expect(400)
         .end(function(err, res){
@@ -125,7 +125,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [{ numUsers: 0, price: 20}, { numUsers: 1000, price: 10}]
       };
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(invalidInput)
         .expect(400)
         .end(function(err, res){
@@ -144,7 +144,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -160,7 +160,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 10} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -176,7 +176,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 5000, price: 5} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -192,7 +192,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 5000, price: 5} ]
       }
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(201)
         .end(function(err, res){
@@ -216,7 +216,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [{ numUsers: 0, price: 20}, { numUsers: 1000, price: 10}]
       };
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(invalidInput)
         .expect(400)
         .end(function(err, res){
@@ -236,7 +236,7 @@ describe('Monthly Charge API', function () {
         "pricingBuckets": [ { numUsers: 0, price: 20}, { numUsers: 1000, price: 10} ]
       };
       request
-        .post('/v1/company/2/monthlyCharges')
+        .post('/v1/company/monthlyCharges')
         .send(body)
         .expect(400)
         .end(function(err, res){
